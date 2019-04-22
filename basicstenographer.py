@@ -12,7 +12,7 @@ class BasicStenographer:
 
     def calculate_gap(self, data_len, img, gap):
         area = (img.size[0]*img.size[1])
-        return (data_len*gap)**2%(area/data_len)
+        return (data_len*gap)%(area/data_len)
 
     def even_divide(self, number, values):
         floor = number // values
@@ -64,10 +64,11 @@ class BasicStenographer:
                     gap_run = 0
                 else:
                     gap_run += 1
+            gap_run += 1
 
         img.save(out_path)
 
-    def read(self, img_path):
+    def unhide(self, img_path):
         img = Image.open(img_path)
         pixels = img.load()
 
@@ -96,5 +97,6 @@ class BasicStenographer:
                     gap_run = 0
                 else:
                     gap_run += 1
+            gap_run += 1
 
         return "".join(data).strip()
