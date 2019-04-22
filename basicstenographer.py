@@ -1,9 +1,10 @@
 from PIL import Image
 
-class Stenographer:
+class BasicStenographer:
     def __init__(self, gap=1000):
         self.gap = gap
         self.max_data_length = 255*3*2 #765 as r,g,b (3 times) 255 (max rgb val) times 2 for two pixels
+        self.pixels_to_skip = [[0,0], [0,1]]
 
     def split_list(self, a_list):
         half = len(a_list) // 2
@@ -41,6 +42,8 @@ class Stenographer:
 
         for col in range(img.size[0]):
             for row in range(img.size[1]):
+                if [col, row] in self.pixels_to_skip:
+                    continue
                 if i < data_len and gap_run >= gap: #if there is still data, and over the run
                     red, green, blue = pixels[col, row]
 
@@ -70,6 +73,7 @@ class Stenographer:
 
         i=0
         data_len = sum(pixels[0,0])+sum(pixels[1,0])
+        print(pixels[0,0], pixels[1,0])
 
         gap = self.calculate_gap(data_len, img, self.gap)
         gap_run=0
@@ -77,6 +81,8 @@ class Stenographer:
 
         for col in range(img.size[0]):
             for row in range(img.size[1]):
+                if [col, row] in self.pixels_to_skip:
+                    continue
                 red, green, blue = pixels[col, row]
 
                 if i < data_len and gap_run >= gap: #if there is still data, and over the current run
