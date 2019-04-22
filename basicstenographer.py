@@ -1,7 +1,8 @@
 from PIL import Image
 
 class BasicStenographer:
-    def __init__(self, gap=1000):
+    def __init__(self, testing=False, gap=1000):
+        self.testing = testing
         self.gap = gap
         self.max_data_length = 255*3*2 #765 as r,g,b (3 times) 255 (max rgb val) times 2 for two pixels
         self.pixels_to_skip = [[0,0], [0,1]]
@@ -32,8 +33,11 @@ class BasicStenographer:
             print(f"Data must be less than {self.max_data_length} chars")
 
         data_len_divided = self.even_divide(data_len, 6)
-        print(len(data_len_divided))
-        print(data_len_divided)
+
+        if self.testing:
+            print(len(data_len_divided))
+            print(data_len_divided)
+
         pixels[0,0] = data_len_divided[:len(data_len_divided)//2]
         pixels[1, 0] = data_len_divided[len(data_len_divided)//2:]
 
@@ -74,7 +78,9 @@ class BasicStenographer:
 
         i=0
         data_len = sum(pixels[0,0])+sum(pixels[1,0])
-        print(pixels[0,0], pixels[1,0])
+
+        if self.testing:
+            print(pixels[0,0], pixels[1,0])
 
         gap = self.calculate_gap(data_len, img, self.gap)
         gap_run=0
@@ -87,7 +93,8 @@ class BasicStenographer:
                 red, green, blue = pixels[col, row]
 
                 if i < data_len and gap_run >= gap: #if there is still data, and over the current run
-                    print(f"Read {red}, {green}, {blue}")
+                    if self.testing:
+                        print(f"Read {red}, {green}, {blue}")
 
                     data[i] = chr(red)
                     data[i+1] = chr(green)
